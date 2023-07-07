@@ -94,6 +94,46 @@ You can then use `kubectl get deployments` to verify the status of the deploymen
 kubectl get deployments
 ```
 
+To check the number of containers deployed and running in each pod, you can use the `kubectl get pods` command along with the `--output` or `-o` flag to specify a custom output format. Here's an example:
+
+```bash
+kubectl get pods -o custom-columns=POD:.metadata.name,CONTAINERS:.spec.containers[*].name
+```
+
+This command will display the name of each pod along with the list of containers running within that pod. The output will look something like this:
+
+```
+POD                       CONTAINERS
+pod1                      container1 container2
+pod2                      container1 container2
+pod3                      container1 container2
+```
+
+To check where the pods and containers are running, you can add additional columns to the custom output format. Here's an example command that includes the node name and the host IP:
+
+```bash
+kubectl get pods -o custom-columns=POD:.metadata.name,CONTAINERS:.spec.containers[*].name,NODE:.spec.nodeName,HOSTIP:.status.hostIP
+```
+
+This command will display the name of each pod, the list of containers within that pod, the node name where the pod is running, and the host IP of that node. The output will look something like this:
+
+```
+POD                       CONTAINERS   NODE       HOSTIP
+busybox-86b6d8c896-9gwvv   busybox      node-1     192.168.1.101
+busybox-86b6d8c896-sp4jp   busybox      node-2     192.168.1.102
+busybox-86b6d8c896-v5nxr   busybox      node-1     192.168.1.101
+```
+
+Each row represents a pod, and the additional columns provide information about the node and host where the pod is scheduled.
+
+Feel free to modify the command or the output format according to your specific requirements.
+
+Each pod name will be followed by the names of the containers running within that pod, separated by spaces.
+
+By using the custom columns option `-o custom-columns=POD:.metadata.name,CONTAINERS:.spec.containers[*].name`, you can customize the output to display the desired information.
+
+Feel free to adjust the command or the output format based on your specific requirements.
+
 Each deployment will have its own status, including the number of ready replicas, up-to-date replicas, and available replicas.
 
 Note: Make sure you have the necessary container images available in your container registry or accessible by your Kubernetes cluster for the deployments to run successfully.
