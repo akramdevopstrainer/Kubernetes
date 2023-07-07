@@ -1,0 +1,99 @@
+To deploy multiple deployments at once, you can create a single YAML manifest file that includes the definitions of all the deployments. Each deployment will be defined as a separate resource within the manifest. Here's an example:
+
+1. Create a file named `all-deployments.yaml` and add the following contents:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: home
+  template:
+    metadata:
+      labels:
+        app: home
+    spec:
+      containers:
+      - name: home
+        image: <your-home-image>
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: profile
+  template:
+    metadata:
+      labels:
+        app: profile
+    spec:
+      containers:
+      - name: profile
+        image: <your-profile-image>
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: billing
+  template:
+    metadata:
+      labels:
+        app: billing
+    spec:
+      containers:
+      - name: billing
+        image: <your-billing-image>
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: settings
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: settings
+  template:
+    metadata:
+      labels:
+        app: settings
+    spec:
+      containers:
+      - name: settings
+        image: <your-settings-image>
+```
+
+2. Replace `<your-home-image>`, `<your-profile-image>`, `<your-billing-image>`, and `<your-settings-image>` with the actual container image names or paths you want to use for each deployment.
+
+3. Apply the manifest to create all the deployments at once:
+```
+kubectl apply -f all-deployments.yaml
+```
+
+This will create the four deployments (`home`, `profile`, `billing`, and `settings`) with their respective replica counts and container images.
+
+You can then use `kubectl get deployments` to verify the status of the deployments:
+
+```
+kubectl get deployments
+```
+
+Each deployment will have its own status, including the number of ready replicas, up-to-date replicas, and available replicas.
+
+Note: Make sure you have the necessary container images available in your container registry or accessible by your Kubernetes cluster for the deployments to run successfully.
